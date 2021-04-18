@@ -39,7 +39,8 @@ export type Operators =
   | 'nlike' // NOT LIKE
   | 'ilike' // ILIKE'
   | 'nilike' // NOT ILIKE
-  | 'regexp'; // REGEXP'
+  | 'regexp' // REGEXP'
+  | 'elemMatch'; // elemMatch
 
 /**
  * Matching predicate comparison
@@ -60,6 +61,7 @@ export type PredicateComparison<PT> = {
   ilike?: PT;
   nilike?: PT;
   regexp?: string | RegExp;
+  elemMatch?: PT;
   // [extendedOperation: string]: any;
 };
 
@@ -435,6 +437,7 @@ export class WhereBuilder<MT extends object = AnyObject> {
     w[key] = {exists: !!val || val == null};
     return this.add(w);
   }
+
   /**
    * Add a where object. For conflicting keys with the existing where object,
    * create an `and` clause.
@@ -501,6 +504,17 @@ export class WhereBuilder<MT extends object = AnyObject> {
   regexp<K extends KeyOf<MT>>(key: K, val: string | RegExp): this {
     const w: Where<MT> = {};
     w[key] = {regexp: val};
+    return this.add(w);
+  }
+
+  /**
+   * Add an `elemMatch` condition.
+   * @param key - Property name
+   * @param val - Property value
+   */
+  elemMatch<K extends KeyOf<MT>>(key: K, val: MT[K]): this {
+    const w: Where<MT> = {};
+    w[key] = {elemMatch: val};
     return this.add(w);
   }
 
