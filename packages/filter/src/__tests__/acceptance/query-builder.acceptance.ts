@@ -132,13 +132,6 @@ describe('WhereBuilder', () => {
     expect(where).to.eql({x: {regexp: /\d{3}/}});
   });
 
-  it('builds where object with elemMatch', () => {
-    const whereBuilder = new WhereBuilder();
-    const where = whereBuilder.elemMatch('y', {x: 'x'}).build();
-
-    expect(where).to.eql({y: {elemMatch: {x: 'x'}}});
-  });
-
   it('builds where object with or', () => {
     const whereBuilder = new WhereBuilder();
     const where = whereBuilder
